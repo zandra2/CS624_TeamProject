@@ -1,38 +1,82 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import axios from 'axios';
-import CustomImage from '@/components/CustomImage';
-import AffirmationButton from '@/components/AffirmationButton';
 
-export default function HomeScreen() {
-  // const [affirmation, setAffirmation] = useState<string>('');
+import AuthStack from '@/app/navigation/AuthStack';
 
-  // const fetchAffirmation = async () => {
-  //   const res = await axios.get<{ affirmation: string }>('https://www.affirmations.dev/');
-  //   setAffirmation(res.data.affirmation);
-  // };
-
-  // useEffect(() => {
-  //   fetchAffirmation();
-  // }, []);
-
-  return (
-    <View style={styles.container}>
-      <Text></Text>
-      <CustomImage source={require('../../assets/images/PsoasStretch.png')} />
-      <Text style={styles.title}>Affirmation of the Day</Text>
-      {/* <Text style={styles.quote}>"{affirmation}"</Text> */}
-      {/* <AffirmationButton title="Get New Quote" onPress={fetchAffirmation} /> */}
-    </View>
-  );
+export default function App() {
+  return <AuthStack />;
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
-  quote: { fontSize: 18, fontStyle: 'italic', marginVertical: 20 },
-});
+//WORKING
+// import { View, Text, ImageBackground, TouchableOpacity, StyleSheet } from 'react-native';
+// import { useNavigation } from '@react-navigation/native';
 
+// export default function HomeScreen() {
+//   const navigation = useNavigation();
+
+//   return (
+//     <ImageBackground source={require('@/assets/images/OksanaTaran.png')} style={styles.background}>
+//       <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+//         <Text style={styles.title}>MindBloom</Text>
+//       </TouchableOpacity>
+//     </ImageBackground>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   background: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     width: '100%',
+//     height: '100%'
+//   },
+//   title: {
+//     fontSize: 50,
+//     color: '#fff',
+//     fontWeight: 'medium',
+//     letterSpacing: 3,
+//   }
+// });
+
+
+// NOT USING
+// import React, { useEffect, useState } from 'react';
+// import { View, Text, StyleSheet } from 'react-native';
+// import axios from 'axios';
+// import CustomImage from '@/components/CustomImage';
+// import AffirmationButton from '@/components/AffirmationButton';
+
+// export default function HomeScreen() {
+//   // const [affirmation, setAffirmation] = useState<string>('');
+
+//   // const fetchAffirmation = async () => {
+//   //   const res = await axios.get<{ affirmation: string }>('https://www.affirmations.dev/');
+//   //   setAffirmation(res.data.affirmation);
+//   // };
+
+//   // useEffect(() => {
+//   //   fetchAffirmation();
+//   // }, []);
+ 
+//   return (
+//     <View style={styles.container}>
+//       <CustomImage source={require('../../assets/images/OksanaTaran.png')} />
+//       <Text style={styles.title}>MindBloom</Text>
+//       {/* <Text style={styles.quote}>"{affirmation}"</Text> */}
+//       {/* <AffirmationButton title="Get New Quote" onPress={fetchAffirmation} /> */}
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: { flex: 1, backgroundColor: '#fff' },
+//   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+//   quote: { fontSize: 18, fontStyle: 'italic', marginVertical: 20 },
+// });
+
+
+
+
+// ORIGINAL CODE
 // import { Image, StyleSheet, Platform } from 'react-native';
 
 // import { HelloWave } from '@/components/HelloWave';
