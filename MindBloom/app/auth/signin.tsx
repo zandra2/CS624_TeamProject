@@ -1,7 +1,7 @@
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-// import api from '../api/api';
+// import api from '../api/api';  //TODO: SETUP BACKEND
 
 export default function SignInScreen() {
   const navigation = useNavigation();

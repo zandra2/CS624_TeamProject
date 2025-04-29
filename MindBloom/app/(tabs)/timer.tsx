@@ -1,136 +1,146 @@
-import { Text, View, StyleSheet } from 'react-native';
+// TESTING TSX FILE
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import GradientButton from '@/components/GradientButton';
 import CustomImage from '@/components/CustomImage';
-
-const ImageSource = require('@/assets/images/KikeVega.png');
+import { timerData } from '@/app/data';
+import axios from 'axios';
 
 export default function TimerScreen() {
+  const [timer, setTimer] = useState(0);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+    // const [intervalId, setIntervalId] = useState(null);
+  // const [timer, setTimer] = useState<number>(0);
+
+  const startTimer = () => {
+    const id = setInterval(() => {
+      setTimer(prev => prev + 1);
+    }, 1000);
+    setIntervalId(id);
+  };
+
+  const pauseTimer = () => {
+    if (intervalId) clearInterval(intervalId);
+    setIntervalId(null);
+  };
+
+  const resetTimer = async () => {
+    if (intervalId) clearInterval(intervalId);
+    setIntervalId(null);
+
+    if (timer > 0) {
+      const now = new Date();
+      try {
+        await axios.post('http://YOUR_SERVER_IP:5000/session', {
+          date: now.toLocaleDateString(),
+          time: Math.floor(timer / 60),
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    setTimer(0);
+  };
+
   return (
-    <View style={styles.timer}>
-      <CustomImage source={ImageSource} />
-      <Text style={styles.header}>Breathing Exercise</Text>
-    </View>
+    <ScrollView style={styles.container}>
+      <CustomImage source={timerData.hero} />
+      <Text style={styles.title}>Breathing Exercise</Text>
+      <View style={styles.lineContainer}>
+        <View style={styles.line} />
+      </View> 
+      <Text style={styles.timer}>{timer} sec</Text>
+      <View style={styles.timerContainer}>
+        <View style={styles.btnContainer}>
+          <TouchableOpacity style={[styles.timerbtn, styles.startbtn]} onPress={startTimer}>
+              <Text>Start</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.timerbtn, styles.pausebtn]} onPress={pauseTimer}>
+              <Text>Pause</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.timerbtn, styles.resetbtn]} onPress={resetTimer}>
+              <Text>Reset</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.timerbtn, styles.logbtn]} onPress={() => navigation.navigate('Log', { duration: timer })}>
+              <Text>Log Session</Text>
+          </TouchableOpacity>
+            {/* <View style={styles.innerContainer}> */}
+            {/* <GradientButton title="Start" onPress={startTimer} />
+              <GradientButton title="Pause" onPress={pauseTimer} />
+              <GradientButton title="Stop" onPress={stopTimer} /> */}
+            {/* </View> */}
+        </View>
+      </View>
+     
+      <View style={styles.lineContainer}>
+        <View style={styles.line} />
+      </View>
+
+      <View style={styles.textContainer}>
+        <View style={styles.innerTextContainer}>
+          <Text style={styles.timerSubTitle}>{timerData.breathing.subtitle}</Text>
+          <View  style={styles.rightContainer}>
+            <Text style={styles.timerContent}>{timerData.breathing.content}</Text>
+            <View>
+              <View style={styles.contentLine} />
+            </View>
+          </View>
+        </View> 
+
+        <View style={styles.innerTextContainer}>
+          <Text style={styles.timerSubTitle}>{timerData.belly.subtitle}</Text>
+          <View  style={styles.rightContainer}>
+            <Text style={styles.timerContent}>{timerData.belly.content}</Text>
+            <View>
+              <View style={styles.contentLine} />
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.innerTextContainer}>
+          <Text style={styles.timerSubTitle}>{timerData.box.subtitle}</Text>
+          <View  style={styles.rightContainer}>
+            <Text style={styles.timerContent}>{timerData.box.content}</Text>
+          <View>
+          <View style={styles.contentLine} /></View>
+          </View>
+        </View>
+
+        <View style={styles.innerTextContainer}>
+          <Text style={styles.timerSubTitle}>{timerData.pursedLip.subtitle}</Text>
+          <View  style={styles.rightContainer}>
+            <Text style={styles.timerContent}>{timerData.pursedLip.content}</Text>
+          <View>
+              <View style={styles.contentLine} />
+            </View>
+          </View>
+        </View>
+
+      </View>    
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  timer: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    marginTop: 20,
-    fontWeight: 'bold',
-    fontSize: 20,
-
-  },
+  container: { flex: 1, backgroundColor: '#fff'},
+  title: {paddingLeft: 20, fontSize: 20, fontWeight:'bold', marginTop: 20 },
+  lineContainer: { alignItems: 'center', marginVertical: 20 },
+  line: { height: 1, backgroundColor: '#ccc', width: '90%'},
+  timerContainer: { flex: 1 },
+  timer: { marginTop: 10, paddingLeft: 20, fontSize: 40, fontWeight: 'bold', marginBottom: 20 },
+  btnContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10, paddingHorizontal: 20},
+  timerbtn: { borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8 },
+  startbtn: {backgroundColor: '#D2F6EB'},
+  pausebtn: {backgroundColor: '#E2E2E2'},
+  resetbtn: {backgroundColor: '#F6D2F6'},
+  logbtn: {backgroundColor: '#F6D2D2'},
+  
+  // Content 
+  textContainer: {justifyContent: 'center'},
+  innerTextContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, gap: 15 },
+  rightContainer: {maxWidth: '60%', flex: 1, justifyContent: 'flex-start', flexDirection: 'column'},
+  contentLine: { height: 1, backgroundColor: '#ccc', width: '100%', marginVertical: 15},
+  timerSubTitle: { fontWeight: 'bold', fontSize: 12 },
+  timerContent: {fontSize: 12},
 });
-
-// import { StyleSheet, Image, Platform } from 'react-native';
-
-// import { Collapsible } from '@/components/Collapsible';
-// import { ExternalLink } from '@/components/ExternalLink';
-// import ParallaxScrollView from '@/components/ParallaxScrollView';
-// import { ThemedText } from '@/components/ThemedText';
-// import { ThemedView } from '@/components/ThemedView';
-// import { IconSymbol } from '@/components/ui/IconSymbol';
-
-// export default function TabTwoScreen() {
-//   return (
-//     <ParallaxScrollView
-//       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-//       headerImage={
-//         <IconSymbol
-//           size={310}
-//           color="#808080"
-//           name="chevron.left.forwardslash.chevron.right"
-//           style={styles.headerImage}
-//         />
-//       }>
-//       <ThemedView style={styles.titleContainer}>
-//         <ThemedText type="title">Explore</ThemedText>
-//       </ThemedView>
-//       <ThemedText>This app includes example code to help you get started.</ThemedText>
-//       <Collapsible title="File-based routing">
-//         <ThemedText>
-//           This app has two screens:{' '}
-//           <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-//           <ThemedText type="defaultSemiBold">app/(tabs)/timer.tsx</ThemedText>
-//         </ThemedText>
-//         <ThemedText>
-//           The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-//           sets up the tab navigator.
-//         </ThemedText>
-//         <ExternalLink href="https://docs.expo.dev/router/introduction">
-//           <ThemedText type="link">Learn more</ThemedText>
-//         </ExternalLink>
-//       </Collapsible>
-//       <Collapsible title="Android, iOS, and web support">
-//         <ThemedText>
-//           You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-//           <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-//         </ThemedText>
-//       </Collapsible>
-//       <Collapsible title="Images">
-//         <ThemedText>
-//           For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-//           <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-//           different screen densities
-//         </ThemedText>
-//         <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-//         <ExternalLink href="https://reactnative.dev/docs/images">
-//           <ThemedText type="link">Learn more</ThemedText>
-//         </ExternalLink>
-//       </Collapsible>
-//       <Collapsible title="Custom fonts">
-//         <ThemedText>
-//           Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-//           <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-//             custom fonts such as this one.
-//           </ThemedText>
-//         </ThemedText>
-//         <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-//           <ThemedText type="link">Learn more</ThemedText>
-//         </ExternalLink>
-//       </Collapsible>
-//       <Collapsible title="Light and dark mode components">
-//         <ThemedText>
-//           This template has light and dark mode support. The{' '}
-//           <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-//           what the user's current color scheme is, and so you can adjust UI colors accordingly.
-//         </ThemedText>
-//         <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-//           <ThemedText type="link">Learn more</ThemedText>
-//         </ExternalLink>
-//       </Collapsible>
-//       <Collapsible title="Animations">
-//         <ThemedText>
-//           This template includes an example of an animated component. The{' '}
-//           <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-//           the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-//           library to create a waving hand animation.
-//         </ThemedText>
-//         {Platform.select({
-//           ios: (
-//             <ThemedText>
-//               The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-//               component provides a parallax effect for the header image.
-//             </ThemedText>
-//           ),
-//         })}
-//       </Collapsible>
-//     </ParallaxScrollView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   headerImage: {
-//     color: '#808080',
-//     bottom: -90,
-//     left: -35,
-//     position: 'absolute',
-//   },
-//   titleContainer: {
-//     flexDirection: 'row',
-//     gap: 8,
-//   },
-// });
