@@ -1,11 +1,74 @@
-
+// WORKING 
 import AuthStack from '@/app/navigation/AuthStack';
 
 export default function App() {
-  return <AuthStack />;
+   return (
+    <AuthStack />
+  );
 }
 
-//WORKING
+
+//MESSED UP home.tsx layout
+// import { View } from 'react-native';
+// import HomeScreen from '../auth/home';
+// import TabNavigator from '@/app/navigation/TabNavigator';
+// import { useState } from 'react';
+// import DashboardScreen from './dashboard';
+
+// export default function App() {
+//   const [isLoggedIn, setIsLoggedIn] = useState(false); // later replace with secure auth check
+//   return (
+//     <View>
+//     {isLoggedIn ? <DashboardScreen navigation={undefined} /> : <HomeScreen />}
+//     </View>
+//   );
+// }
+
+
+// import { NavigationContainer } from '@react-navigation/native';
+// import AuthStack from '@/app/navigation/AuthStack';
+// import TabNavigator from '@/app/navigation/TabNavigator';
+// import { useState } from 'react';
+
+// export default function App() {
+//   const [isLoggedIn, setIsLoggedIn] = useState(false); // later replace with secure auth check
+
+//   return (
+//     <NavigationContainer>
+//       {isLoggedIn ? <TabNavigator /> : <AuthStack />}
+//     </NavigationContainer>
+//   );
+// }
+
+
+//RENDER MAIN PAGE ***NOT WORKING***
+// import App from '@/app/App';
+
+// export default function HomeScreen() {
+//    return (
+//     <App />
+//   );
+// }
+
+
+//NOT WORKING
+// import { NavigationContainer } from '@react-navigation/native';
+// import AuthStack from '@/app/navigation/AuthStack';
+// import TabNavigator from '@/app/navigation/TabNavigator';
+// import { useState } from 'react';
+
+// export default function App() {
+//   const [isLoggedIn, setIsLoggedIn] = useState(true); // later replace with secure auth check
+
+//   return (
+//     <NavigationContainer>
+//       {isLoggedIn ? <TabNavigator /> : <AuthStack />}
+//     </NavigationContainer>
+//   );
+// }
+
+
+//WORKING *******
 // import { View, Text, ImageBackground, TouchableOpacity, StyleSheet } from 'react-native';
 // import { useNavigation } from '@react-navigation/native';
 

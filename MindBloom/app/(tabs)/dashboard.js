@@ -2,15 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import CustomImage from '@/components/CustomImage';
 import CustomImageButton from '@/components/CustomImageButton';
+import { dashboardData } from '@/app/data';
 import axios from 'axios';
+import { useRouter } from 'expo-router';
+//TODO:  Both router and Navigation are not working
 
 export default function DashboardScreen({ navigation }) {
   const [username, setUsername] = useState('Makenna Max'); // Fetch from MongoDB later
   const [quote, setQuote] = useState('');
+  const router = useRouter();
 
   const fetchAffirmation = async () => {
     try {
-      const res = await axios.get('https://www.affirmations.dev/');
+      const res = await axios.get('https://api.quotable.io/random');
+      // const res = await axios.get('https://www.affirmations.dev/'); //CORS ERROR NEED TO SETUP BACKEND
       setQuote(res.data.affirmation);
     } catch (error) {
       console.error(error);
@@ -24,42 +29,36 @@ export default function DashboardScreen({ navigation }) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Image source={require('@/assets/images/MichaelDam.png')} style={styles.avatar} />
+        <Image source={dashboardData.avatar} style={styles.avatar} />
         <View style={styles.usercontainer}>
             <Text style={styles.welcome}>Welcome back, </Text>
             <Text style={styles.username}>{username}</Text>
         </View>
       </View>
 
-      <CustomImage source={require('@/assets/images/PsoasStretch.png')}/>
+      <CustomImage source={dashboardData.hero}/>
 
       <View style={styles.grid}>
         {/* Affirmation Quote Button */}
         <TouchableOpacity style={styles.button} onPress={fetchAffirmation}>
             <CustomImageButton
-            source={require('@/assets/images/first_button.png')}
+            source={dashboardData.getQuoteBtn}
             onPress={() => console.log('Pressed!')}
-            // title="Get Quote"
-            // source={require('@/assets/images/WesleyTingey.png')}
             />
         </TouchableOpacity>
 
         {/* Breathing Exercise Timer Button */}
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Timer')}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('timer')}>
             <CustomImageButton
-            source={require('@/assets/images/second_button.png')}
+            source={dashboardData.startTimerBtn}
             onPress={() => console.log('Pressed!')}
-            // title="Get Quote"
-            // source={require('@/assets/images/WesleyTingey.png')}
             />
         </TouchableOpacity>
         {/* Session Log Button */}
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Log')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('log')}>
             <CustomImageButton
-            source={require('@/assets/images/third_button.png')}
+            source={dashboardData.logSessionBtn}
             onPress={() => console.log('Pressed!')}
-            // title="Get Quote"
-            // source={require('@/assets/images/WesleyTingey.png')}
             />
         </TouchableOpacity>
 
