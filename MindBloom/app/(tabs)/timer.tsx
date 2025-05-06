@@ -18,26 +18,98 @@ const CIRCLE_SIZE    = width * 0.6
 const BREATH_DURATION = 4000 // ms
 
 export default function TimerScreen() {
+  const scale = useRef(new Animated.Value(1)).current
+  const [phase, setPhase] = useState<'Inhale'|'Exhale'>('Inhale')
+  const [seconds, setSeconds] = useState(0)
+  const router = useRouter()
+
+  // 1️⃣ Run and track the breathing cycle
+  useEffect(() => {
+    let timerId: NodeJS.Timeout
+    const runCycle = () => {
+      setPhase('Inhale')
+      Animated.timing(scale, {
+        toValue: 1.5,
+        duration: BREATH_DURATION,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: true,
+      }).start(() => {
+        setPhase('Exhale')
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: BREATH_DURATION,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }).start(() => {
+          runCycle()
+        })
+      })
+
+      // track seconds
+      setSeconds(0)
+      clearInterval(timerId)
+      timerId = setInterval(() => setSeconds(s => s + 1), 1000)
+    }
+
+    runCycle()
+    return () => clearInterval(timerId)
+  }, [scale])
+
+  // 2️⃣ Write a new session to AsyncStorage
+  const logSession = async () => {
+    try {
+      const newEntry = {
+        id: Date.now().toString(),
+        timestamp: new Date().toISOString(),
+        duration: seconds,
+      }
+      const raw = await AsyncStorage.getItem('sessions')
+      const sessions = raw ? JSON.parse(raw) : []
+      sessions.push(newEntry)
+      await AsyncStorage.setItem('sessions', JSON.stringify(sessions))
+      Alert.alert('Logged!', `Session of ${seconds}s saved.`)
+    } catch (e) {
+      Alert.alert('Error', 'Could not save session.')
+    }
+  }
+
   return (
-    <View style={styles.timer}>
-      <CustomImage source={ImageSource} />
+    <View style={styles.container}>
+      <Animated.View style={[styles.circle, { transform: [{ scale }] }]} />
       <Text style={styles.header}>Breathing Exercise</Text>
+      <Text style={styles.phase}>{phase}</Text>
+      <Text style={styles.timer}>{seconds}s</Text>
+
+      {/* 3️⃣ Buttons to navigate or log */}
+      <View style={styles.buttons}>
+        <Button title="Log Session" onPress={logSession} />
+        <Button title="View Logs" onPress={() => router.push('/log')} />
+      </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  timer: {
-    flex: 1,
-    backgroundColor: '#fff',
+  container: {
+    flex: 1, backgroundColor: '#E8F4F8',
+    alignItems: 'center', justifyContent: 'center', padding: 20,
   },
-  header: {
+  circle: {
+    width: CIRCLE_SIZE, height: CIRCLE_SIZE,
+    borderRadius: CIRCLE_SIZE/2, backgroundColor: '#A3D5FF',
+    marginBottom: 20,
+  },
+  header: { fontSize: 24, fontWeight:'600' },
+  phase:  { fontSize: 20, color: '#333', marginVertical: 4 },
+  timer:  { fontSize: 18, marginBottom: 16 },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
     marginTop: 20,
-    fontWeight: 'bold',
-    fontSize: 20,
-
   },
-});
+})
+
 
 // import { StyleSheet, Image, Platform } from 'react-native';
 
