@@ -23,7 +23,7 @@ export default function TimerScreen() {
   const [seconds, setSeconds] = useState(0)
   const router = useRouter()
 
-  // 1️⃣ Run and track the breathing cycle
+  // Run and track the breathing cycle
   useEffect(() => {
     let timerId: NodeJS.Timeout
     const runCycle = () => {
@@ -55,7 +55,7 @@ export default function TimerScreen() {
     return () => clearInterval(timerId)
   }, [scale])
 
-  // 2️⃣ Write a new session to AsyncStorage
+  // Write a new session to AsyncStorage
   const logSession = async () => {
     try {
       const newEntry = {
